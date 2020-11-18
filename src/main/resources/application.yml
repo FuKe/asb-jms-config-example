@@ -1,0 +1,5 @@
+spring:
+  jms:
+    servicebus:
+      connection-string: ${ASB_CONNECTION_STRING}
+      topic-client-id: "topic-consumer-service"
