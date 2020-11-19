@@ -18,7 +18,7 @@ class JmsConfig {
 
     @Bean
     @Primary
-    fun myListenerContainerFactory(
+    fun transactedListenerContainerFactory(
             connectionFactory: ConnectionFactory, prefetchPolicy: JmsPrefetchPolicy
     ): JmsListenerContainerFactory<DefaultMessageListenerContainer> {
         // Overwrite the default PrefetchPolicy already set in JmsConnectionFactory from org.apache.qpid.jms
@@ -40,6 +40,7 @@ class JmsConfig {
 
         return listenerContainerFactory
     }
+
 
     @Bean
     fun prefetchPolicy(): JmsPrefetchPolicy {

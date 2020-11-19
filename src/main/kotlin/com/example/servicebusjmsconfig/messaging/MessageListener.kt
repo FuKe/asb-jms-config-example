@@ -1,10 +1,9 @@
 package com.example.servicebusjmsconfig.messaging
 
-import org.springframework.jms.annotation.JmsListener
-import org.springframework.stereotype.Component
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import javax.jms.Message
+import org.springframework.jms.annotation.JmsListener
+import org.springframework.stereotype.Component
 import javax.jms.TextMessage
 
 @Component
@@ -16,9 +15,10 @@ class MessageListener {
     @JmsListener(
             destination = "message-topic",
             subscription = "consumer-service",
-            containerFactory = "myListenerContainerFactory"
+            containerFactory = "transactedListenerContainerFactory"
     )
     fun receiveMessage(msg: TextMessage) {
         log.info("Message received: ${msg.text}")
     }
+
 }
