@@ -19,11 +19,11 @@ class JmsConfig {
     @Bean
     @Primary
     fun transactedListenerContainerFactory(
-            connectionFactory: ConnectionFactory, prefetchPolicy: JmsPrefetchPolicy
+            connectionFactory: ConnectionFactory
     ): JmsListenerContainerFactory<DefaultMessageListenerContainer> {
         // Overwrite the default PrefetchPolicy already set in JmsConnectionFactory from org.apache.qpid.jms
         ((connectionFactory as CachingConnectionFactory).targetConnectionFactory as JmsConnectionFactory)
-                .prefetchPolicy = prefetchPolicy
+                .prefetchPolicy = prefetchPolicy()
 
         val listenerContainerFactory = DefaultJmsListenerContainerFactory()
         listenerContainerFactory.setConnectionFactory(connectionFactory)
@@ -41,18 +41,13 @@ class JmsConfig {
         return listenerContainerFactory
     }
 
-
-    @Bean
-    fun prefetchPolicy(): JmsPrefetchPolicy {
+    private fun prefetchPolicy(): JmsPrefetchPolicy {
         // Adjust the prefetch size to a number of messages that can be processed before
         // the default message lock of 30 seconds is exceeded. The default prefetch size is 1000.
-        val preferredPrefetchSize = 100
         val prefetchPolicy = JmsDefaultPrefetchPolicy()
-        prefetchPolicy.queuePrefetch = preferredPrefetchSize
-        prefetchPolicy.durableTopicPrefetch = preferredPrefetchSize
-        prefetchPolicy.topicPrefetch = preferredPrefetchSize
-        prefetchPolicy.queueBrowserPrefetch = preferredPrefetchSize
+        prefetchPolicy.setAll(100)
 
         return prefetchPolicy
     }
+
 }
